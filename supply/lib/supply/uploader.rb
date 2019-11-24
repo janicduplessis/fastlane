@@ -195,7 +195,13 @@ module Supply
         UI.message("Updating changelog for '#{version_code}' and language '#{language}'...")
         changelog_text = File.read(path, encoding: 'UTF-8')
       else
-        UI.message("Could not find changelog for '#{version_code}' and language '#{language}' at path #{path}...")
+        path = File.join(Supply.config[:metadata_path], language, Supply::CHANGELOGS_FOLDER_NAME, "default.txt")
+        if File.exist?(path)
+          UI.message("Updating default changelog for '#{version_code}' and language '#{language}'...")
+          changelog_text = File.read(path, encoding: 'UTF-8')
+        else
+          UI.message("Could not find changelog for '#{version_code}' and language '#{language}' at path #{path}...")
+        end
       end
 
       AndroidPublisher::LocalizedText.new({
